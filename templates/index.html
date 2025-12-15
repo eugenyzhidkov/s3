@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3 Files Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        ul { list-style: none; padding: 0; }
+        li { background: #f9f9f9; margin: 10px 0; padding: 15px; border-radius: 8px; border-left: 5px solid #007bff; }
+        .empty { color: #666; font-style: italic; }
+        button { padding: 12px 24px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin: 10px 0; }
+        button:hover { background: #0056b3; }
+        .footer { margin-top: 40px; text-align: center; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Файлы в S3 бакете "{{.Bucket}}"</h1>
+        <p><strong>Всего файлов:</strong> {{len .Files}}</p>
+
+        <ul>
+            {{range .Files}}
+            <li>{{.}}</li>
+            {{end}}
+            {{if not .Files}}
+            <li class="empty">Бакет пустой. Загрузите картинки!</li>
+            {{end}}
+        </ul>
+
+        <div style="text-align: center;">
+            <button onclick="location.reload()">Обновить список</button>
+        </div>
+
+        <form action="/upload" method="post">
+            <button type="submit" style="background: #28a745;">Загрузить и сжать картинки из static/</button>
+        </form>
+
+        <form action="/move" method="post">
+            <button type="submit" style="background: #dc3545;">Переместить в archive/</button>
+        </form>
+
+        <div class="footer">
+            <p>MinIO консоль: <a href="http://localhost:9001" target="_blank">http://localhost:9001</a></p>
+        </div>
+    </div>
+</body>
+</html>

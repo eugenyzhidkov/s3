@@ -1,0 +1,21 @@
+services:
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"     # S3 API — можно переопределить
+      - "${MINIO_CONSOLE_PORT:-9001}:9001" # Консоль — можно переопределить
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: ${MINIO_HEALTH_INTERVAL:-30s}
+      timeout: ${MINIO_HEALTH_TIMEOUT:-20s}
+      retries: ${MINIO_HEALTH_RETRIES:-3}
+      start_period: ${MINIO_HEALTH_START_PERIOD:-10s}
+
+volumes:
+  minio-data:
